@@ -1,39 +1,20 @@
 package main
 
 import (
-	"errors"
 	"fmt"
-	"os"
-	"strconv"
+
+	"example.com/control-structure/fileops"
+	"github.com/Pallinder/go-randomdata"
 )
 
 const accountBalanceFile = "balance.txt"
 
-func getBalanceFromFile() (float64, error) {
-	data, err := os.ReadFile(accountBalanceFile)
-
-	if err != nil {
-		return 1000, errors.New("failed to find balance file")
-	}
-
-	balanceText := string(data)
-	balance, err := strconv.ParseFloat(balanceText, 64)
-	if err != nil {
-		return 1000, errors.New("failed to parse stored balance value")
-	}
-	return balance, nil
-}
-
-func writeBalanceToFile(balance float64) {
-	balanceText := fmt.Sprint(balance)
-	os.WriteFile(accountBalanceFile, []byte(balanceText), 0644)
-}
-
 func main() {
 	fmt.Println("Welcome to Go Bank!")
+	fmt.Println("Reach us 24*7 on :", randomdata.PhoneNumber())
 
 	presentOptions()
-	accountBalance, err := getBalanceFromFile()
+	accountBalance, err := fileops.GetFloatFromFile(accountBalanceFile)
 
 	if err != nil {
 		fmt.Println("Error")
@@ -67,7 +48,7 @@ func main() {
 
 			accountBalance += depositAmount
 			fmt.Println("New Account Balance:", accountBalance)
-			writeBalanceToFile(accountBalance)
+			fileops.WritefloatTofile(accountBalance, accountBalanceFile)
 
 		case 3:
 			fmt.Println("Withdraw Value: ")
@@ -87,7 +68,7 @@ func main() {
 			accountBalance -= withdrawAmount
 			fmt.Println("New Account Balance:", accountBalance)
 
-			writeBalanceToFile(accountBalance)
+			fileops.WritefloatTofile(accountBalance, accountBalanceFile)
 
 		default:
 			fmt.Println("Goodbye!")
